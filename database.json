@@ -1,0 +1,234 @@
+{
+  "Users": [
+    {
+      "user_id": 1,
+      "email": "lietotajs@grozcalc.lv",
+      "password_hash": "hash_user123",
+      "role": "user",
+      "created_at": "2026-05-01 10:00:00"
+    },
+    {
+      "user_id": 2,
+      "email": "admin_deniss@grozcalc.lv",
+      "password_hash": "hash_admin456",
+      "role": "admin",
+      "created_at": "2026-05-01 10:00:00"
+    }
+  ],
+  "User_Profiles": [
+    {
+      "profile_id": 1,
+      "user_id": 1,
+      "name": "Daniils",
+      "weight": 76.5,
+      "height": 182,
+      "age": 21,
+      "calorie_target": 2200,
+      "protein_target": 140,
+      "fat_target": 70,
+      "carbs_target": 220
+    },
+    {
+      "profile_id": 2,
+      "user_id": 2,
+      "name": "Deniss (Admin)",
+      "weight": 80.0,
+      "height": 185,
+      "age": 22,
+      "calorie_target": 2400,
+      "protein_target": 150,
+      "fat_target": 75,
+      "carbs_target": 240
+    }
+  ],
+  "Products": [
+    {
+      "product_id": 1,
+      "name": "Valmieras biezpiens 0.5%",
+      "brand": "Valmiera",
+      "store": "Rimi",
+      "price": 1.39,
+      "calories": 80.0,
+      "protein": 16.0,
+      "fat": 0.5,
+      "carbs": 3.0,
+      "quality_badge": "Ļoti ieteicams"
+    },
+    {
+      "product_id": 2,
+      "name": "Baltais Vājpiena Biezpiens 0.5%",
+      "brand": "Baltais",
+      "store": "Rimi",
+      "price": 1.29,
+      "calories": 78.0,
+      "protein": 16.5,
+      "fat": 0.5,
+      "carbs": 2.0,
+      "quality_badge": "Ļoti ieteicams"
+    },
+    {
+      "product_id": 3,
+      "name": "Hanzas Maiznīca Tostmaize",
+      "brand": "Hanzas Maiznīca",
+      "store": "Rimi",
+      "price": 1.15,
+      "calories": 250.0,
+      "protein": 8.0,
+      "fat": 2.0,
+      "carbs": 50.0,
+      "quality_badge": "Neitrāls"
+    },
+    {
+      "product_id": 4,
+      "name": "Saldā biezpiena masa ar rozīnēm",
+      "brand": "Kārums",
+      "store": "Maxima",
+      "price": 1.89,
+      "calories": 310.0,
+      "protein": 9.0,
+      "fat": 14.0,
+      "carbs": 36.0,
+      "quality_badge": "Neieteicams"
+    },
+    {
+      "product_id": 5,
+      "name": "Šokolādes sieriņš Kārums",
+      "brand": "Kārums",
+      "store": "Maxima",
+      "price": 0.55,
+      "calories": 380.0,
+      "protein": 8.2,
+      "fat": 22.0,
+      "carbs": 36.0,
+      "quality_badge": "Neitrāls"
+    },
+    {
+      "product_id": 6,
+      "name": "Pilnpiena Biezpiens 9%",
+      "brand": "Valmiera",
+      "store": "Rimi",
+      "price": 1.59,
+      "calories": 154.0,
+      "protein": 16.0,
+      "fat": 9.0,
+      "carbs": 2.5,
+      "quality_badge": "Ļoti ieteicams"
+    },
+    {
+      "product_id": 7,
+      "name": "Alma piens 2.5%",
+      "brand": "Alma",
+      "store": "Maxima",
+      "price": 1.19,
+      "calories": 54.0,
+      "protein": 3.2,
+      "fat": 2.5,
+      "carbs": 4.7,
+      "quality_badge": "Ļoti ieteicams"
+    },
+    {
+      "product_id": 8,
+      "name": "Forevers Vistas krūtiņas fileja",
+      "brand": "Forevers",
+      "store": "Rimi",
+      "price": 5.99,
+      "calories": 115.0,
+      "protein": 23.5,
+      "fat": 1.5,
+      "carbs": 0.0,
+      "quality_badge": "Ļoti ieteicams"
+    },
+    {
+      "product_id": 9,
+      "name": "Well Done Olas M 10gb",
+      "brand": "Well Done",
+      "store": "Maxima",
+      "price": 1.79,
+      "calories": 143.0,
+      "protein": 12.6,
+      "fat": 9.5,
+      "carbs": 0.7,
+      "quality_badge": "Ļoti ieteicams"
+    },
+    {
+      "product_id": 10,
+      "name": "Selga Klasiskie cepumi",
+      "brand": "Selga",
+      "store": "Maxima",
+      "price": 0.89,
+      "calories": 440.0,
+      "protein": 7.5,
+      "fat": 14.0,
+      "carbs": 70.0,
+      "quality_badge": "Neieteicams"
+    },
+    {
+      "product_id": 11,
+      "name": "Lāču Īstā Rudzu maize",
+      "brand": "Lāči",
+      "store": "Rimi",
+      "price": 2.19,
+      "calories": 215.0,
+      "protein": 6.2,
+      "fat": 1.2,
+      "carbs": 44.0,
+      "quality_badge": "Ļoti ieteicams"
+    },
+    {
+      "product_id": 12,
+      "name": "Trikāta Siers Krievijas 50%",
+      "brand": "Trikāta",
+      "store": "Maxima",
+      "price": 2.49,
+      "calories": 345.0,
+      "protein": 24.0,
+      "fat": 28.0,
+      "carbs": 0.0,
+      "quality_badge": "Neitrāls"
+    }
+  ],
+  "Daily_Logs": [
+    {
+      "log_id": 1,
+      "user_id": 1,
+      "log_date": "2026-10-27",
+      "total_calories": 285.0,
+      "total_protein": 36.0,
+      "total_fat": 2.0,
+      "total_carbs": 31.0
+    }
+  ],
+  "Log_Items": [
+    {
+      "item_id": 1,
+      "log_id": 1,
+      "product_id": 1,
+      "meal_type": "Pusdienas",
+      "quantity_grams": 200,
+      "item_calories": 160.0,
+      "item_protein": 32.0,
+      "item_fat": 1.0,
+      "item_carbs": 6.0
+    },
+    {
+      "item_id": 2,
+      "log_id": 1,
+      "product_id": 3,
+      "meal_type": "Pusdienas",
+      "quantity_grams": 50,
+      "item_calories": 125.0,
+      "item_protein": 4.0,
+      "item_fat": 1.0,
+      "item_carbs": 25.0
+    }
+  ],
+  "Blacklist": [
+    {
+      "blacklist_id": 1,
+      "user_id": 1,
+      "product_id": 4,
+      "reason": "Augsts cukura daudzums (24g uz 100g)",
+      "added_date": "2026-05-20 14:32:00"
+    }
+  ]
+}

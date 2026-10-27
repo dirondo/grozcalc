@@ -1,0 +1,23 @@
+{
+  "name": "grozcalc-prototype",
+  "version": "1.0.0",
+  "description": "GrozCalc - Grozu kaloriju kalkulatora prototips (RTU Sistēmu projektējums)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "nutrition",
+    "calories",
+    "calculator",
+    "rimi",
+    "maxima",
+    "grozcalc"
+  ],
+  "author": "Daniils Galviņš, Deniss Smirnovs, Vladislavs Hatiņecs",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  }
+}

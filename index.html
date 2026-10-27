@@ -1,0 +1,464 @@
+﻿<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GrozCalc - Grozu kaloriju kalkulators | Prototips</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥗</text></svg>">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    
+    <header class="system-bar">
+      <div class="system-brand">
+        <div class="brand-icon">🥗</div>
+        <div>
+          <h1 class="brand-title">GrozCalc</h1>
+          <p class="brand-subtitle">Grozu kaloriju kalkulators</p>
+        </div>
+      </div>
+
+      <div class="system-controls">
+        
+        <div class="control-pill" title="Pārslēgt aktīvo lomu sistēmā">
+          <span>👤</span>
+          <select id="user-role-selector" onchange="switchUserRole(this.value)">
+            <option value="user" selected>Lietotājs: Daniils</option>
+            <option value="admin">Administrators: Deniss</option>
+          </select>
+        </div>
+
+<button id="admin-save-json-btn" class="control-pill" onclick="saveDatabaseToFile()" style="background: rgba(76, 175, 80, 0.35); border-color: #81C784; display: none;" title="Saglabāt visas izmaiņas failā database.json">
+          <span>💾</span>
+          <span>Saglabāt JSON</span>
+        </button>
+      </div>
+    </header>
+
+<main class="app-container">
+      
+      <nav class="app-nav">
+            <button class="nav-tab active" data-tab="diary" onclick="switchTab('diary')">
+              <span>📅</span> <span>Dienasgrāmata</span>
+            </button>
+            <button class="nav-tab" data-tab="catalog" onclick="switchTab('catalog')">
+              <span>🔍</span> <span>Produktu katalogs</span>
+            </button>
+            <button class="nav-tab admin-tab" id="nav-admin-tab" data-tab="admin" onclick="switchTab('admin')" style="display: none;">
+              <span>⚙️</span> <span>Vadības panelis</span>
+            </button>
+            <button class="nav-tab" data-tab="analytics" onclick="switchTab('analytics')">
+              <span>📊</span> <span>Analītika</span>
+            </button>
+            <button class="nav-tab" data-tab="blacklist" onclick="switchTab('blacklist')">
+              <span>🚫</span> <span>Melnais saraksts</span>
+            </button>
+            <button class="nav-tab" data-tab="profile" onclick="switchTab('profile')">
+              <span>👤</span> <span>Profils & Dati</span>
+            </button>
+          </nav>
+
+<section id="section-diary" class="page-section active">
+            
+            <div class="date-ribbon">
+              <div>
+                <span class="date-title">Aktīvā uzskaites diena:</span>
+              </div>
+              <div class="date-controls">
+                <button class="date-btn" onclick="changeDate(-1)" title="Iepriekšējā diena">◀</button>
+                <span class="current-date-badge" id="current-diary-date-badge">24. Maijs</span>
+                <button class="date-btn" onclick="changeDate(1)" title="Nākamā diena">▶</button>
+                <button class="date-btn" onclick="selectedDate = getTodayDateString(); renderDailyDiary();" title="Atgriezties uz šodienu" style="width: auto; padding: 0 8px; font-size: 0.78rem;">Šodien</button>
+              </div>
+            </div>
+
+<div class="card goal-card">
+              <div class="goal-header">
+                <div>
+                  <div class="goal-label">Dienas kaloriju mērķis</div>
+                  <div class="goal-value" id="diary-goal-target">2200 kcal</div>
+                </div>
+                <div style="text-align: right;">
+                  <span id="current-user-role-text" style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px;">Lietotājs: Daniils</span>
+                </div>
+              </div>
+
+<div class="progress-track">
+                <div class="progress-fill" id="diary-progress-fill" style="width: 13%;"></div>
+              </div>
+
+              <div class="goal-stats-row">
+                <span>Uzņemts: <strong id="diary-consumed-kcal">285 kcal</strong></span>
+                <span>Atlicis: <strong id="diary-remaining-kcal">1915 kcal</strong></span>
+              </div>
+
+<div class="macros-grid">
+                <div class="macro-box">
+                  <div class="macro-box-title">Olbaltumvielas (OB)</div>
+                  <div class="macro-box-values" id="macro-protein-val">36g / 140g</div>
+                  <div class="macro-bar-mini"><div class="macro-bar-mini-fill protein" id="macro-protein-bar" style="width: 25%;"></div></div>
+                </div>
+                <div class="macro-box">
+                  <div class="macro-box-title">Tauki (T)</div>
+                  <div class="macro-box-values" id="macro-fat-val">2g / 70g</div>
+                  <div class="macro-bar-mini"><div class="macro-bar-mini-fill fat" id="macro-fat-bar" style="width: 3%;"></div></div>
+                </div>
+                <div class="macro-box">
+                  <div class="macro-box-title">Ogļhidrāti (OH)</div>
+                  <div class="macro-box-values" id="macro-carbs-val">31g / 220g</div>
+                  <div class="macro-bar-mini"><div class="macro-bar-mini-fill carbs" id="macro-carbs-bar" style="width: 14%;"></div></div>
+                </div>
+              </div>
+            </div>
+
+<div class="card">
+              <div class="card-header-flex">
+                <h2 class="card-title">🍽️ Dienas patērētā pārtika</h2>
+                <button class="btn-primary" onclick="switchTab('catalog')">
+                  + Pievienot produktu
+                </button>
+              </div>
+
+              <div id="diary-items-list">
+                
+              </div>
+            </div>
+          </section>
+
+<section id="section-catalog" class="page-section">
+            <div class="card">
+              <div class="card-header-flex">
+                <h2 class="card-title">🔍 Veikalu produktu katalogs</h2>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Reāli pieejamie Rimi un Maxima produkti</span>
+              </div>
+
+<div class="search-controls">
+                <div class="search-input-wrapper">
+                  <span class="search-icon">🔍</span>
+                  <input type="text" id="catalog-search-input" class="search-input" placeholder="Meklēt produktu: biezpiens, piens, maize, fileja...">
+                </div>
+
+                <select id="catalog-store-select" class="filter-select">
+                  <option value="Visi">🏪 Visi veikali</option>
+                  <option value="Rimi">Rimi</option>
+                  <option value="Maxima">Maxima</option>
+                </select>
+
+                <select id="catalog-badge-select" class="filter-select">
+                  <option value="Visi">🏷️ Visi zīmogi</option>
+                  <option value="Ļoti ieteicams">🟢 Ļoti ieteicams</option>
+                  <option value="Neitrāls">🟡 Neitrāls</option>
+                  <option value="Neieteicams">🔴 Neieteicams</option>
+                </select>
+
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; color: var(--text-muted);">
+                  <input type="checkbox" id="catalog-show-blacklist-check">
+                  <span>Rādīt melnā saraksta preces</span>
+                </label>
+              </div>
+
+<div class="products-grid" id="catalog-products-grid">
+                
+              </div>
+            </div>
+          </section>
+
+<section id="section-admin" class="page-section">
+            <div class="card">
+              <div class="admin-toolbar">
+                <div>
+                  <h2 class="card-title">⚙️ Administratora vadības panelis</h2>
+                  <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Pārtikas produktu kataloga pārvaldība un datu integritātes uzraudzība</p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <button class="btn-secondary" onclick="triggerScraperSync()">
+                    🔄 Sinhronizēt Rimi / Maxima datus
+                  </button>
+                  <button class="btn-primary" onclick="openAddProductModal()">
+                    + Pievienot jaunu produktu
+                  </button>
+                </div>
+              </div>
+
+<div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nosaukums</th>
+                      <th>Zīmols</th>
+                      <th>Veikals</th>
+                      <th>kcal/100g</th>
+                      <th>Olb / T / Ogļh</th>
+                      <th>Kvalitātes zīmogs</th>
+                      <th>Darbības</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-products-table-body">
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+<section id="section-analytics" class="page-section">
+            <div id="analytics-summary-view">
+              
+            </div>
+
+            <div class="analytics-grid">
+              <div class="card">
+                <h3 class="card-title" style="margin-bottom: 14px;">🎯 Mērķu atbilstības pārskats</h3>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Ikdienas kaloriju bilance un uzturvielu sadalījums palīdz novērtēt uztura kvalitāti un sabalansētību.</p>
+                <div style="background: var(--surface-alt); padding: 14px; border-radius: var(--radius-md); font-size: 0.85rem;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span>Ieteicamā olbaltumvielu norma:</span>
+                    <strong>1.6 - 2.0 g/kg svara</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span>Veselīgo tauku īpatsvars:</span>
+                    <strong>20 - 30% no kopējām kalorijām</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between;">
+                    <span>Produkti ar zaļo kvalitātes zīmogu:</span>
+                    <strong style="color: #2E7D32;">Vismaz 70% no groza</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <h3 class="card-title" style="margin-bottom: 14px;">🛒 Grozu sastāva kvalitātes audits</h3>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Sistēma automātiski analizē izvēlēto produktu uzturvērtību attiecību.</p>
+                <div style="display: flex; gap: 10px; flex-direction: column;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #E8F5E9; border-radius: var(--radius-sm); border: 1px solid #A5D6A7;">
+                    <span>🟢 Ļoti ieteicams (zemāks cukurs, dabīgs sastāvs)</span>
+                    <strong>Ieteicams uzturā</strong>
+                  </div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #FFF8E1; border-radius: var(--radius-sm); border: 1px solid #FFE082;">
+                    <span>🟡 Neitrāls (vidēja pārstrādes pakāpe)</span>
+                    <strong>Mērenā daudzumā</strong>
+                  </div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #FFEBEE; border-radius: var(--radius-sm); border: 1px solid #FFCDD2;">
+                    <span>🔴 Neieteicams (daudz piesātināto tauku/cukura)</span>
+                    <strong>Ierobežot vai bloķēt</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+<section id="section-blacklist" class="page-section">
+            <div class="card">
+              <div class="card-header-flex">
+                <div>
+                  <h2 class="card-title">🚫 Lietotāja Melnais saraksts</h2>
+                  <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Produkti, no kuriem lietotājs vēlas izvairīties (alerģijas, neveselīgas sastāvdaļas vai personīgās preferences)</p>
+                </div>
+                <button class="btn-secondary" onclick="switchTab('catalog')">
+                  + Bloķēt produktu no kataloga
+                </button>
+              </div>
+
+              <div id="blacklist-items-container">
+                
+              </div>
+            </div>
+          </section>
+
+<section id="section-profile" class="page-section">
+            <div class="analytics-grid">
+              
+              <div class="card">
+                <h3 class="card-title" style="margin-bottom: 16px;">👤 Lietotāja profila parametri</h3>
+                <form id="profile-form" onsubmit="saveUserProfile(event)">
+                  <div class="form-group">
+                    <label class="form-label">Vārds / Segvārds</label>
+                    <input type="text" id="profile-name-input" class="form-input" required>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label">Svars (kg)</label>
+                      <input type="number" step="0.5" id="profile-weight-input" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Augums (cm)</label>
+                      <input type="number" id="profile-height-input" class="form-input" required>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label">Vecums</label>
+                      <input type="number" id="profile-age-input" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Dienas kaloriju mērķis (kcal)</label>
+                      <input type="number" step="10" id="profile-target-input" class="form-input" required>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+                    Saglabāt profilu
+                  </button>
+                </form>
+              </div>
+
+<div class="card" id="admin-db-tools-card" style="display: none;">
+                <h3 class="card-title" style="margin-bottom: 16px;">💾 Datu saglabāšana un demonstrācija</h3>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+                  Šis prototips reāli nolasa, apstrādā un saglabā datus atbilstoši projektējuma relāciju SQL struktūrai (Users, Products, Daily_Logs, Log_Items, Blacklist).
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <button class="btn-secondary" onclick="exportDatabaseJSON()">
+                    📥 Eksportēt datubāzi (JSON fails)
+                  </button>
+                  <label class="btn-secondary" style="cursor: pointer; justify-content: center;">
+                    📤 Importēt datubāzi no JSON faila
+                    <input type="file" accept=".json" onchange="importDatabaseJSON(this)" style="display: none;">
+                  </label>
+                  <button class="btn-secondary" style="color: #C62828; border-color: #EF9A9A;" onclick="if(confirm('Vai atiestatīt visus datus uz sākotnējo stāvokli?')) { db.reset(); location.reload(); }">
+                    🔄 Atiestatīt uz sākotnējiem demo datiem
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+<footer class="footer-info">
+        <p><strong>GrozCalc Prototips</strong></p>
+        <p style="margin-top: 4px;">Autori: Daniils Galviņš, Deniss Smirnovs, Vladislavs Hatiņecs</p>
+      </footer>
+    </main>
+  </div>
+
+<div id="add-to-cart-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Pievienot produktu dienas uzskaitei</h3>
+        <button class="modal-close" onclick="closeModals()">✕</button>
+      </div>
+      <div class="modal-body">
+        <h4 id="modal-add-product-name" style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 4px;">Produkta nosaukums</h4>
+        <p id="modal-add-product-macros" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Uzturvērtības uz 100g</p>
+
+        <div class="form-group">
+          <label class="form-label">Ēdienreize</label>
+          <select id="modal-add-meal-select" class="form-select">
+            <option value="Brokastis">Brokastis</option>
+            <option value="Pusdienas" selected>Pusdienas</option>
+            <option value="Vakariņas">Vakariņas</option>
+            <option value="Uzkodas">Uzkodas</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Patērētais daudzums gramos (g)</label>
+          <input type="number" id="modal-add-grams-input" class="form-input" min="1" step="5" value="100">
+        </div>
+
+        <div style="background: var(--surface-alt); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-top: 10px;">
+          <span id="modal-add-preview-text" style="font-weight: 700; color: var(--primary-dark);">Kopā: 0 kcal</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModals()">Atcelt</button>
+        <button class="btn-primary" onclick="confirmAddToCart()">Pievienot dienasgrāmatai</button>
+      </div>
+    </div>
+  </div>
+
+<div id="blacklist-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Pievienot melnajam sarakstam</h3>
+        <button class="modal-close" onclick="closeModals()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 12px;">Vai tiešām vēlaties bloķēt produktu <strong id="blacklist-modal-product-name">-</strong>?</p>
+        <div class="form-group">
+          <label class="form-label">Bloķēšanas iemesls</label>
+          <textarea id="blacklist-modal-reason" class="form-textarea" rows="3" placeholder="Piemēram: Alerģija pret riekstiem, par daudz cukura, u.c."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModals()">Atcelt</button>
+        <button class="btn-primary" style="background:#C62828;" onclick="confirmAddToBlacklist()">Bloķēt produktu</button>
+      </div>
+    </div>
+  </div>
+
+<div id="admin-product-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="product-modal-title">Pievienot jaunu produktu</h3>
+        <button class="modal-close" onclick="closeModals()">✕</button>
+      </div>
+      <form id="product-form" onsubmit="submitAdminProductForm(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Produkta nosaukums *</label>
+            <input type="text" id="admin-prod-name" class="form-input" placeholder="Piem., Valmieras biezpiens 0.5%" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Zīmols *</label>
+              <input type="text" id="admin-prod-brand" class="form-input" placeholder="Piem., Valmiera" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Veikals *</label>
+              <select id="admin-prod-store" class="form-select">
+                <option value="Rimi">Rimi</option>
+                <option value="Maxima">Maxima</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Cena (€) *</label>
+              <input type="number" step="0.01" min="0" id="admin-prod-price" class="form-input" placeholder="1.49" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kalorijas (kcal uz 100g) *</label>
+              <input type="number" step="0.1" min="0" id="admin-prod-calories" class="form-input" placeholder="80" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Olbaltumvielas (g/100g) *</label>
+              <input type="number" step="0.1" min="0" id="admin-prod-protein" class="form-input" placeholder="16.0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tauki (g/100g) *</label>
+              <input type="number" step="0.1" min="0" id="admin-prod-fat" class="form-input" placeholder="0.5" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ogļhidrāti (g/100g) *</label>
+              <input type="number" step="0.1" min="0" id="admin-prod-carbs" class="form-input" placeholder="3.0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kvalitātes zīmogs *</label>
+              <select id="admin-prod-badge" class="form-select">
+                <option value="Ļoti ieteicams">🟢 Ļoti ieteicams</option>
+                <option value="Neitrāls" selected>🟡 Neitrāls</option>
+                <option value="Neieteicams">🔴 Neieteicams</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeModals()">Atcelt</button>
+          <button type="submit" class="btn-primary">Saglabāt produktu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
